@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Task 1 — Аналитика посещаемости</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f9;
+            color: #222;
+        }
+        .container {
+            width: 1100px;
+            margin: 30px auto;
+        }
+        .header {
+            background: #1f4e79;
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        h1, h2, h3 {
+            margin-top: 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 15px;
+        }
+        .stat-box {
+            background: #eef3f8;
+            padding: 16px;
+            border-radius: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            background: #1f4e79;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background: #163a5c;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+        .footer-note {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Система анализа посещаемости сайта</h1>
+            <p>Задание 1. Flask + InfluxDB + Docker + прогноз посещаемости</p>
+        </div>
+
+        <div class="card">
+            <h2>Управление системой</h2>
+            <a class="btn" href="/stats" target="_blank">Открыть JSON-статистику</a>
+            <a class="btn" href="/visits" target="_blank">Открыть JSON-данные</a>
+            <a class="btn" href="/forecast_data" target="_blank">Открыть данные прогноза</a>
+        </div>
+
+        <div class="card">
+            <h2>Основные показатели</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>Всего посещений</h3>
+                    <p>{{ stats.total_visits }}</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Уникальных пользователей</h3>
+                    <p>{{ stats.unique_users }}</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Средняя длительность</h3>
+                    <p>{{ stats.avg_duration }} сек.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Топ страниц</h2>
+            <ul>
+                {% for page, count in stats.top_pages.items() %}
+                    <li><strong>{{ page }}</strong> — {{ count }} посещений</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Источники трафика</h2>
+            <ul>
+                {% for source, count in stats.top_sources.items() %}
+                    <li><strong>{{ source }}</strong> — {{ count }} посещений</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Прогноз посещаемости</h2>
+            <p>Ниже отображается график фактической посещаемости и прогноз на 7 дней вперед.</p>
+            <img src="/forecast" alt="Прогноз посещаемости">
+        </div>
+
+        <div class="card">
+            <p class="footer-note">
+                Интерфейс демонстрирует наличие данных, аналитических показателей и прогноза посещаемости в одном окне браузера.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

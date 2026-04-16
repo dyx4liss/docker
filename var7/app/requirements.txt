@@ -1,0 +1,4 @@
+flask
+pandas
+influxdb-client
+matplotlib

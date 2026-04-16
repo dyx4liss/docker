@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  influxdb:
+    image: influxdb:2.7
+    container_name: task_1_influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: admin12345
+      DOCKER_INFLUXDB_INIT_ORG: analytics_org
+      DOCKER_INFLUXDB_INIT_BUCKET: visits_bucket
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: my-super-token
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: task_1_app
+    depends_on:
+      - influxdb
+    ports:
+      - "5000:5000"
+    environment:
+      INFLUX_URL: http://influxdb:8086
+      INFLUX_TOKEN: my-super-token
+      INFLUX_ORG: analytics_org
+      INFLUX_BUCKET: visits_bucket
+    volumes:
+      - ./data:/data
+      - ./output:/output
+
+volumes:
+  influxdb_data:
